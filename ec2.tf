@@ -22,7 +22,16 @@ data "aws_ami" "ubuntu" {
 
 resource "aws_instance" "web" {
   ami           = "${data.aws_ami.ubuntu.id}"
-  instance_type = "t2.micro"
+  instance_type = "c7g.8xlarge"
+
+  tags = {
+    Name = "HelloWorld"
+  }
+}
+
+resource "aws_instance" "web2" {
+  ami           = "${data.aws_ami.ubuntu.id}"
+  instance_type = "c7g.8xlarge"
 
   tags = {
     Name = "HelloWorld"
