@@ -1,0 +1,32 @@
+acm-certificatemanager-days-expiry:
+  enabled: true
+  name: "(ACM) Certificate Expiry Days - ${company_name}, ${aws_account_id}"
+  type: query alert
+  query: |
+    min(last_1d):min:aws.certificatemanager.days_to_expiry{aws_account_id:${aws_account_id}} by {aws_account_id,aws_account_name,certificatearn} < 30
+  message: |
+    {{#is_alert}}
+    ACM Certificate {{certificatearn.name}} is going to expire within {{threshold}} days!
+    Tags:
+    - **aws_account:** {{aws_account_name.name}}
+    - **aws_account_name:** {{aws_account_name.name}}
+    - **certificate_name:** {{certificatearn.name}}
+    {{/is_alert}}
+  escalation_message: ""
+  tags: [ "ManagedBy:Terraform", "Revision:0.1.0", "Account:${aws_account_name}" ]
+  priority: 3
+  notify_no_data: false
+  notify_audit: false
+  require_full_window: true
+  enable_logs_sample: false
+  force_delete: true
+  include_tags: false
+  locked: false
+  renotify_interval: 0
+  timeout_h: 1
+  evaluation_delay: 900
+  new_host_delay: 300
+  no_data_timeframe: 10
+  monitor_threshold_windows: {}
+  monitor_thresholds:
+    critical: 30
